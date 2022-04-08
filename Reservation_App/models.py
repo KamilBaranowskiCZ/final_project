@@ -30,3 +30,6 @@ class SportMatches(models.Model):
     gametime = models.TimeField()
     max_num_of_players = models.IntegerField()
     list_of_players = models.ManyToManyField(User, related_name="players", default=None, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.pitch} - {self.gamedate} - {self.gametime} - {self.max_num_of_players} graczy "
