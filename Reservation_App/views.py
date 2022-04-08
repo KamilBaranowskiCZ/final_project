@@ -45,7 +45,7 @@ class CreateSportPitchesView(CreateView):
     success_url = reverse_lazy("index")
 
     def get_initial(self):
-            return { 'city': 1}
+            return { 'city': 2}
     
 
     def get_form(self, form_class=None):
