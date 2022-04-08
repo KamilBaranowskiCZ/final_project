@@ -14,7 +14,9 @@ class RegisterForm(UserCreationForm):
 
 
 class SportPitchesForm(forms.ModelForm):
-
+    def __init__(self, *args, **kwargs):
+        super(SportPitchesForm, self).__init__(*args, **kwargs)
+        self.fields['city'].disabled = True
     class Meta:
         fields = ('name', 'city', 'location', 'location_lat', 'location_lon', )
         model = SportPitches
