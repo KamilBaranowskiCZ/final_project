@@ -1,6 +1,6 @@
 from ctypes import cdll
 from urllib import response
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -21,8 +21,11 @@ class CityView(View):
     def get(self, request, city):
         selected_city = Cities.objects.filter(name=city).first()
         allpitches = SportPitches.objects.filter(city_id=selected_city.id)
-        print(selected_city)
-        return render(request, f'{city}.html', {"allpitches": allpitches, "selected_city": selected_city})
+        all_matches = []
+        for pitch in allpitches:
+            one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id)
+            all_matches.append(one_pitch_matches)
+        return render(request, f'{city}.html', {"all_matches": all_matches, "selected_city": selected_city})
 
 
 def register(response):
@@ -66,3 +69,7 @@ class CreateSportMatchesView(CreateView):
         form.fields['list_of_players'].widget = forms.HiddenInput()
         return form
 
+class MatchDetails(View):
+        def get(self, request, city, sportmatches_id):
+            match = get_object_or_404(SportMatches, pk=sportmatches_id)
+            return render(request, 'matchDetail.html', {"match": match})

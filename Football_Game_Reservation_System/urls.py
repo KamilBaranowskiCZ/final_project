@@ -23,6 +23,7 @@ from Reservation_App.views import (
     CreateSportPitchesView,
     CreateSportMatchesView,
     CityView,
+    MatchDetails
 )
 
 urlpatterns = [
@@ -33,4 +34,5 @@ urlpatterns = [
     path("<str:city>/pitchcreate", CreateSportPitchesView.as_view()),
     path("<str:city>/games", CreateSportMatchesView.as_view()),
     path("<str:city>", CityView.as_view()),
+    path("<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
 ]

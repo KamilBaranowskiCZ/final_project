@@ -7,7 +7,11 @@
   {% endif %}
 {% endblock %}
 {% block content %}
-{% for pitch in allpitches %}
-  <li>{{pitch}}</li>
+{% for one_pitch_matches in all_matches %}
+  {% for onematch in one_pitch_matches %}
+  <li>
+    <a href="{{selected_city}}/{{onematch.id}}">{{onematch}}</a>
+  </li>
+  {% endfor %}
 {% endfor %}
 {% endblock %}
