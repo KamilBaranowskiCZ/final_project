@@ -1,0 +1,92 @@
+
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  /* Add a color to the active/current link */
+  .topnav a.active {
+    background-color: #dbce15;
+    color: white;
+  }
+  
+  .topnav div {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 14px 16px;
+  }
+  .topnav .login {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 14px 16px;
+  }
+
+.container{
+  width: 100%;
+  height: 90vh;
+  box-sizing: border-box;
+}
+
+.row{
+  display: flex;
+  height: 88%;
+  align-items: center;
+}
+
+.col{
+  flex-basis: 50%;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+
+.card{
+  width: 550px;
+  height: 500px;
+  display: inline-block;
+  border-radius: 10px;
+  padding: 15px 25px;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin: 10px 15px;
+  background-position: center;
+  background-size: cover;
+  transition: transform 0.5s;
+  color: black;
+  font-size: 40px;
+}
+
+.card1{
+  background-image: url(/static/images/warsaw.jpeg);
+}
+
+.card2{
+  background-image: url(/static/images/cracow.jpeg);
+}
+
+.card:hover{
+  transform: translateY(-10px);
+}

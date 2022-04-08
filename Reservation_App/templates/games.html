@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Stwórz grę{% endblock %}
+{% block content %}
+<head>
+  <title></title>
+  <script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+</head>
+<body>
+  {{ form.media }}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Stwórz grę" />
+  </form>
+</body>
+{% endblock %}
