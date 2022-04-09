@@ -9,9 +9,10 @@ from osm_field.fields import LatitudeField, LongitudeField, OSMField
 
 class Cities(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    
+
     def __str__(self):
         return self.name
+
 
 class SportPitches(models.Model):
     name = models.CharField(max_length=70, unique=True)

@@ -18,24 +18,28 @@ class RegisterForm(UserCreationForm):
 class SportPitchesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SportPitchesForm, self).__init__(*args, **kwargs)
-        self.fields['city'].disabled = True
+        self.fields["city"].disabled = True
+
     class Meta:
-        fields = ('name', 'city', 'location', 'location_lat', 'location_lon', )
+        fields = (
+            "name",
+            "city",
+            "location",
+            "location_lat",
+            "location_lon",
+        )
         model = SportPitches
-        
 
 
 class SportMatchesForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super(SportMatchesForm, self).__init__(*args, **kwargs)
-        self.fields['creator'].initial = User.username
+        self.fields["creator"].initial = User.username
 
     class Meta:
-        fields = ('pitch', 'creator', 'gamedate', 'gametime', 'max_num_of_players')
+        fields = ("pitch", "creator", "gamedate", "gametime", "max_num_of_players")
         model = SportMatches
         widgets = {
-            'gamedate' : DatePickerInput(),
-            'gametime' : TimePickerInput(),
+            "gamedate": DatePickerInput(),
+            "gametime": TimePickerInput(),
         }
-        

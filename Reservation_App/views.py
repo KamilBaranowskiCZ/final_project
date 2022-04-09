@@ -2,7 +2,7 @@ from ctypes import cdll
 from unicodedata import name
 from urllib import response
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views import View 
+from django.views import View
 from django.contrib.auth import login, authenticate, get_user
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm, SportPitchesForm, SportMatchesForm
@@ -15,7 +15,7 @@ from random import shuffle
 
 class MainPageView(View):
     def get(self, request):
-        return render(request, 'main_page.html')
+        return render(request, "main_page.html")
 
 
 class CityView(View):
@@ -26,7 +26,11 @@ class CityView(View):
         for pitch in allpitches:
             one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id)
             all_matches.append(one_pitch_matches)
-        return render(request, f'{city}.html', {"all_matches": all_matches, "selected_city": selected_city})
+        return render(
+            request,
+            f"{city}.html",
+            {"all_matches": all_matches, "selected_city": selected_city},
+        )
 
 
 def register(response):
@@ -34,12 +38,10 @@ def register(response):
         form = RegisterForm(response.POST)
         if form.is_valid():
             form.save()
-        return redirect('/')
-    else:    
+        return redirect("/")
+    else:
         form = RegisterForm()
-    return render(response, "register/register.html", {"form": form}) 
-
-
+    return render(response, "register/register.html", {"form": form})
 
 
 class CreateSportPitchesView(CreateView):
@@ -49,21 +51,19 @@ class CreateSportPitchesView(CreateView):
     success_url = reverse_lazy("index")
 
     def get_initial(self):
-        cityname=self.kwargs.get('city')
+        cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
-            return { 'city': 2}
+            return {"city": 2}
         elif cityname == "Kraków":
-            return { 'city': 1}
-    
+            return {"city": 1}
 
     def get_form(self, form_class=None):
-        form = super().get_form( form_class)
-        form.fields['location_lat'].widget = forms.HiddenInput()
-        form.fields['location_lon'].widget = forms.HiddenInput()
+        form = super().get_form(form_class)
+        form.fields["location_lat"].widget = forms.HiddenInput()
+        form.fields["location_lon"].widget = forms.HiddenInput()
         return form
-    
 
-    
+
 class CreateSportMatchesView(CreateView):
     template_name = "games.html"
     form_class = SportMatchesForm
@@ -72,14 +72,15 @@ class CreateSportMatchesView(CreateView):
 
     def get_initial(self):
         name = get_user(self.request)
-        return { 'creator': name}
+        return {"creator": name}
 
     def get_form(self, form_class=None):
-        form = super().get_form( form_class)
-        form.fields['creator'].widget = forms.HiddenInput()
+        form = super().get_form(form_class)
+        form.fields["creator"].widget = forms.HiddenInput()
         return form
 
+
 class MatchDetails(View):
-        def get(self, request, city, sportmatches_id):
-            match = get_object_or_404(SportMatches, pk=sportmatches_id)
-            return render(request, 'matchDetail.html', {"match": match})
+    def get(self, request, city, sportmatches_id):
+        match = get_object_or_404(SportMatches, pk=sportmatches_id)
+        return render(request, "matchDetail.html", {"match": match})
