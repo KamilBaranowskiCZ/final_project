@@ -31,8 +31,8 @@ urlpatterns = [
     path("", MainPageView.as_view(), name="index"),
     path("register/", register, name="register"),
     path("", include("django.contrib.auth.urls")),
-    path("<str:city>/pitchcreate", CreateSportPitchesView.as_view()),
-    path("<str:city>/games", CreateSportMatchesView.as_view()),
-    path("<str:city>", CityView.as_view()),
-    path("<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
+    path("city/<str:city>/pitchcreate", CreateSportPitchesView.as_view()),
+    path("city/<str:city>/games", CreateSportMatchesView.as_view()),
+    path("city/<str:city>", CityView.as_view()),
+    path("city/<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
 ]
