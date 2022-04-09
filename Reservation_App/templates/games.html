@@ -2,10 +2,12 @@
 {% block title %}Stwórz grę{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
+
 <head>
   <title></title>
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
 </head>
+
 <body>
   {{ form.media }}
   <form action="" method="post">

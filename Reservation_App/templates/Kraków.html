@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Strona główna{% endblock %}
 {% block navbar %}
-  {% if user.is_authenticated %}
-  <a href="{{selected_city}}/pitchcreate">Dodaj boisko</a>
-  <a href="{{selected_city}}/games">Stwórz grę</a>
-  {% endif %}
+{% if user.is_authenticated %}
+<a href="{{selected_city}}/pitchcreate">Dodaj boisko</a>
+<a href="{{selected_city}}/games">Stwórz grę</a>
+{% endif %}
 {% endblock %}
 {% block content %}
 {% for one_pitch_matches in all_matches %}
-  {% for onematch in one_pitch_matches %}
-  <li>
-    <a href="{{selected_city}}/{{onematch.id}}">{{onematch}}</a>
-  </li>
-  {% endfor %}
+{% for onematch in one_pitch_matches %}
+<li>
+  <a href="{{selected_city}}/{{onematch.id}}">{{onematch}}</a>
+</li>
+{% endfor %}
 {% endfor %}
 {% endblock %}
