@@ -1,4 +1,5 @@
 from enum import unique
+from nis import match
 from django.db import models
 from django.forms import CharField
 from django.contrib.auth.models import User
@@ -29,7 +30,11 @@ class SportMatches(models.Model):
     gamedate = models.DateField()
     gametime = models.TimeField()
     max_num_of_players = models.IntegerField()
-    list_of_players = models.ManyToManyField(User, related_name="players", default=None, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.pitch} - {self.gamedate} - {self.gametime} - {self.max_num_of_players} graczy "
+        return f"{self.pitch} - {self.gamedate} - {self.gametime} - {self.max_num_of_players} graczy, stworzona przez {self.creator} "
+
+
+class ListOfPlayers(models.Model):
+    match = models.ForeignKey(SportMatches, on_delete=models.PROTECT)
+    player = models.CharField(max_length=10, unique=True)

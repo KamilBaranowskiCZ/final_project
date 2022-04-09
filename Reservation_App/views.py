@@ -1,8 +1,9 @@
 from ctypes import cdll
+from unicodedata import name
 from urllib import response
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, get_user
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm, SportPitchesForm, SportMatchesForm
 from django import forms
@@ -48,7 +49,11 @@ class CreateSportPitchesView(CreateView):
     success_url = reverse_lazy("index")
 
     def get_initial(self):
+        cityname=self.kwargs.get('city')
+        if cityname == "Warszawa":
             return { 'city': 2}
+        elif cityname == "Kraków":
+            return { 'city': 1}
     
 
     def get_form(self, form_class=None):
@@ -57,6 +62,7 @@ class CreateSportPitchesView(CreateView):
         form.fields['location_lon'].widget = forms.HiddenInput()
         return form
     
+
     
 class CreateSportMatchesView(CreateView):
     template_name = "games.html"
@@ -64,9 +70,13 @@ class CreateSportMatchesView(CreateView):
     model = SportMatches
     success_url = reverse_lazy("index")
 
+    def get_initial(self):
+        name = get_user(self.request)
+        return { 'creator': name}
+
     def get_form(self, form_class=None):
         form = super().get_form( form_class)
-        form.fields['list_of_players'].widget = forms.HiddenInput()
+        form.fields['creator'].widget = forms.HiddenInput()
         return form
 
 class MatchDetails(View):

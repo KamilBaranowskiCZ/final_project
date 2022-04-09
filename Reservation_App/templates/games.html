@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Stwórz grę{% endblock %}
 {% block content %}
+{% if user.is_authenticated %}
 <head>
   <title></title>
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
@@ -13,4 +14,7 @@
     <input type="submit" value="Stwórz grę" />
   </form>
 </body>
+{% else %}
+<h1><a href="/login" class="login">Zaloguj się</a></h1>
+{% endif %}
 {% endblock %}
