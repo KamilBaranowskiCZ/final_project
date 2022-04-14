@@ -38,4 +38,4 @@ class SportMatches(models.Model):
 
 class ListOfPlayers(models.Model):
     match = models.ForeignKey(SportMatches, on_delete=models.PROTECT)
-    player = models.CharField(max_length=10, unique=True)
+    playerName = models.CharField(max_length=30)

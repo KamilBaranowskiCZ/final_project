@@ -1,4 +1,5 @@
 from ctypes import cdll
+from nis import match
 from unicodedata import name
 from urllib import response
 from django.shortcuts import redirect, render, get_object_or_404
@@ -8,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm, SportPitchesForm, SportMatchesForm
 from django import forms
 from django.views.generic import CreateView, ListView
-from .models import SportPitches, SportMatches, Cities
+from .models import SportPitches, SportMatches, Cities, ListOfPlayers
 from django.urls import reverse_lazy, reverse
 from random import shuffle
 
@@ -77,10 +78,35 @@ class CreateSportMatchesView(CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["creator"].widget = forms.HiddenInput()
+        cityname = self.kwargs.get("city")
+        if cityname == "Warszawa":
+            form.fields["pitch"].queryset = SportPitches.objects.filter(city=2)
+        elif cityname == "Kraków":
+            form.fields["pitch"].queryset = SportPitches.objects.filter(city=1)
         return form
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        obj = self.object
+        obj.save()
+        ListOfPlayers.objects.create(match_id=obj.id, playerName=get_user(self.request))
+        return super().form_valid(form)
 
 
 class MatchDetails(View):
     def get(self, request, city, sportmatches_id):
         match = get_object_or_404(SportMatches, pk=sportmatches_id)
-        return render(request, "matchDetail.html", {"match": match})
+        list_of_players = ListOfPlayers.objects.filter(match_id=sportmatches_id)
+        player_counter = 0
+        for player in list_of_players:
+            player_counter += 1
+        empty_places = match.max_num_of_players - player_counter
+        return render(
+            request,
+            "matchDetail.html",
+            {
+                "match": match,
+                "list_of_players": list_of_players,
+                "empty_places": empty_places,
+            },
+        )
