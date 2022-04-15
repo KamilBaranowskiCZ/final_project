@@ -6,12 +6,13 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib.auth import login, authenticate, get_user
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm, SportPitchesForm, SportMatchesForm
+from .forms import RegisterForm, SportPitchesForm, SportMatchesForm, ListOfPlayerForm
 from django import forms
 from django.views.generic import CreateView, ListView
 from .models import SportPitches, SportMatches, Cities, ListOfPlayers
 from django.urls import reverse_lazy, reverse
-from random import shuffle
+from django.http import HttpResponseRedirect
+from datetime import datetime
 
 
 class MainPageView(View):
@@ -25,7 +26,7 @@ class CityView(View):
         allpitches = SportPitches.objects.filter(city_id=selected_city.id)
         all_matches = []
         for pitch in allpitches:
-            one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id)
+            one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id).filter(gamedate__gte=datetime.today())
             all_matches.append(one_pitch_matches)
         return render(
             request,
@@ -101,12 +102,36 @@ class MatchDetails(View):
         for player in list_of_players:
             player_counter += 1
         empty_places = match.max_num_of_players - player_counter
-        return render(
-            request,
-            "matchDetail.html",
-            {
-                "match": match,
-                "list_of_players": list_of_players,
-                "empty_places": empty_places,
-            },
-        )
+        name = get_user(self.request)
+        print(empty_places)
+        if empty_places > 0:
+            form = ListOfPlayerForm(initial={'playerName': name, "match": match})
+            form.fields["playerName"].widget = forms.HiddenInput()
+            form.fields["match"].widget = forms.HiddenInput()
+            return render(
+                request,
+                "matchDetail.html",
+                {
+                    "match": match,
+                    "list_of_players": list_of_players,
+                    "empty_places": empty_places,
+                    "form": form
+                },
+            )
+        else:
+            return render(
+                request,
+                "matchDetailEmpty.html",
+                {
+                    "match": match,
+                    "list_of_players": list_of_players,
+                    "empty_places": empty_places,
+                },
+            )
+    def post(self, request, city, sportmatches_id):
+        form = ListOfPlayerForm(request.POST)
+        if form.is_valid():
+            new_player = ListOfPlayers.objects.create(match=form.cleaned_data['match'],
+                                                 playerName=form.cleaned_data['playerName'],)
+            return HttpResponseRedirect(self.request.path_info)
+        
