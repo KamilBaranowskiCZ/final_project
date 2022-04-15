@@ -103,7 +103,8 @@ class MatchDetails(View):
             player_counter += 1
         empty_places = match.max_num_of_players - player_counter
         name = get_user(self.request)
-        print(empty_places)
+        location_lat = str(match.pitch.location_lat)
+        location_lon = str(match.pitch.location_lon)
         if empty_places > 0:
             form = ListOfPlayerForm(initial={'playerName': name, "match": match})
             form.fields["playerName"].widget = forms.HiddenInput()
@@ -115,7 +116,9 @@ class MatchDetails(View):
                     "match": match,
                     "list_of_players": list_of_players,
                     "empty_places": empty_places,
-                    "form": form
+                    "form": form,
+                    "location_lat": location_lat,
+                    "location_lon": location_lon,
                 },
             )
         else:
@@ -126,6 +129,8 @@ class MatchDetails(View):
                     "match": match,
                     "list_of_players": list_of_players,
                     "empty_places": empty_places,
+                    "location_lat": location_lat,
+                    "location_lon": location_lon,
                 },
             )
     def post(self, request, city, sportmatches_id):
