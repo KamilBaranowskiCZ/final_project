@@ -16,13 +16,6 @@
 <h5>
     Liczba wolnych miejsc: {{empty_places}}
 </h5>
-{% if user.is_authenticated %}
-<form class="myform" action = "" method = "post">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Dodaj siebie">
-</form>
-{% endif %}
 <p>Lista graczy: </p>
 {% for player in list_of_players %}
 <ul>

@@ -3,6 +3,8 @@ from nis import match
 from django.db import models
 from django.forms import CharField
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
+import datetime
 
 from osm_field.fields import LatitudeField, LongitudeField, OSMField
 
@@ -28,7 +30,7 @@ class SportPitches(models.Model):
 class SportMatches(models.Model):
     pitch = models.ForeignKey(SportPitches, on_delete=models.PROTECT)
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
-    gamedate = models.DateField()
+    gamedate = models.DateField(validators=[MinValueValidator(datetime.date.today)])
     gametime = models.TimeField()
     max_num_of_players = models.IntegerField()
 
@@ -37,5 +39,5 @@ class SportMatches(models.Model):
 
 
 class ListOfPlayers(models.Model):
-    match = models.ForeignKey(SportMatches, on_delete=models.PROTECT)
+    match = models.ForeignKey(SportMatches, on_delete=models.CASCADE)
     playerName = models.CharField(max_length=30)

@@ -90,3 +90,7 @@
 .card:hover {
   transform: translateY(-10px);
 }
+
+.myform{
+  border: 0cm;
+}
