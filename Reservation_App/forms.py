@@ -33,9 +33,16 @@ class SportPitchesForm(forms.ModelForm):
             "type",
         )
         model = SportPitches
+        labels = {
+            "name": "Nazwa",
+            "city": "Miasto",
+            "location": "Lokacja",
+        }
 
     type = forms.ModelMultipleChoiceField(
-        queryset=PitchType.objects.all(), widget=forms.CheckboxSelectMultiple
+        label="Szczegóły boiska",
+        queryset=PitchType.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
     )
 
 
@@ -53,6 +60,12 @@ class SportMatchesForm(forms.ModelForm):
             "max_num_of_players",
         )
         model = SportMatches
+        labels = {
+            "pitch": "Boisko",
+            "gamedate": "Data",
+            "gametime": "Godzina rozpoczęcia",
+            "max_num_of_players": "Liczba graczy",
+        }
         widgets = {
             "gamedate": DatePickerInput(),
             "gametime": TimePickerInput(),
