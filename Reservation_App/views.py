@@ -28,10 +28,17 @@ class CityView(View):
         for pitch in allpitches:
             one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id).filter(gamedate__gte=datetime.today())
             all_matches.append(one_pitch_matches)
+        all_coordinates = []
+        for matches in all_matches:
+            for one_match in matches:
+                location_lat = str(one_match.pitch.location_lat)
+                location_lon = str(one_match.pitch.location_lon)
+                coordinates = location_lat + " , " + location_lon
+                all_coordinates.append(coordinates)
         return render(
             request,
             f"{city}.html",
-            {"all_matches": all_matches, "selected_city": selected_city},
+            {"all_matches": all_matches, "selected_city": selected_city, "all_coordinates": all_coordinates},
         )
 
 

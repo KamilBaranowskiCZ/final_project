@@ -19,6 +19,12 @@
     Stworzona przez: {{ match.creator }}
 </h4>
 <h5>
+    Szczegóły boiska:
+    {% for type in match.pitch.type.all %}
+    {{type}} |
+    {% endfor %}
+</h5>
+<h5>
     Liczba graczy: {{match.max_num_of_players}}
 </h5>
 <h5>

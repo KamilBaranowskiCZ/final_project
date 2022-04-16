@@ -15,6 +15,24 @@ class Cities(models.Model):
     def __str__(self):
         return self.name
 
+class PitchType(models.Model):
+    TYPESOFPITCH = (
+        (0, 'Hala'),
+        (1, 'Na świeżym powietrzu'),
+        (2, 'Pod balonem'),
+        (3, 'Trawiaste'),
+        (4, 'Sztuczna trawa'),
+        (5, 'Tartan'),
+        (6, 'Z szatnią'),
+        (7, 'Brak szatni')
+
+    )
+    type = models.IntegerField(choices=TYPESOFPITCH)
+
+    def __str__(self):
+        return self.get_type_display()
+
+
 
 class SportPitches(models.Model):
     name = models.CharField(max_length=70, unique=True)
@@ -22,6 +40,7 @@ class SportPitches(models.Model):
     location = OSMField()
     location_lat = LatitudeField()
     location_lon = LongitudeField()
+    type = models.ManyToManyField(PitchType)
 
     def __str__(self):
         return self.name
