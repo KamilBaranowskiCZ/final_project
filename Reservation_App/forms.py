@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import SportPitches, SportMatches, Cities, ListOfPlayers
+from .models import SportPitches, SportMatches, Cities, ListOfPlayers, PitchType
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 
 
@@ -27,9 +27,13 @@ class SportPitchesForm(forms.ModelForm):
             "location",
             "location_lat",
             "location_lon",
+            'type'
         )
         model = SportPitches
-
+    type = forms.ModelMultipleChoiceField(
+        queryset=PitchType.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
 
 class SportMatchesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
