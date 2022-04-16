@@ -1,10 +1,13 @@
-from urllib import request
 from django import forms
-from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import SportPitches, SportMatches, Cities, ListOfPlayers, PitchType
-from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
+from .models import (
+    SportPitches,
+    SportMatches,
+    ListOfPlayers,
+    PitchType,
+)
+from .widgets import DatePickerInput, TimePickerInput
 
 
 class RegisterForm(UserCreationForm):
@@ -27,13 +30,14 @@ class SportPitchesForm(forms.ModelForm):
             "location",
             "location_lat",
             "location_lon",
-            'type'
+            "type",
         )
         model = SportPitches
+
     type = forms.ModelMultipleChoiceField(
-        queryset=PitchType.objects.all(),
-        widget=forms.CheckboxSelectMultiple
+        queryset=PitchType.objects.all(), widget=forms.CheckboxSelectMultiple
     )
+
 
 class SportMatchesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -41,16 +45,24 @@ class SportMatchesForm(forms.ModelForm):
         self.fields["creator"].initial = User.username
 
     class Meta:
-        fields = ("pitch", "creator", "gamedate", "gametime", "max_num_of_players")
+        fields = (
+            "pitch",
+            "creator",
+            "gamedate",
+            "gametime",
+            "max_num_of_players",
+        )
         model = SportMatches
         widgets = {
             "gamedate": DatePickerInput(),
             "gametime": TimePickerInput(),
         }
 
+
 class ListOfPlayerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ListOfPlayerForm, self).__init__(*args, **kwargs)
+
     class Meta:
         fields = ("match", "playerName")
         model = ListOfPlayers

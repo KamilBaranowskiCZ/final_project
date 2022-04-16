@@ -1,16 +1,16 @@
-from ctypes import cdll
-from nis import match
-from unicodedata import name
-from urllib import response
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
-from django.contrib.auth import login, authenticate, get_user
-from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm, SportPitchesForm, SportMatchesForm, ListOfPlayerForm
+from django.contrib.auth import get_user
+from .forms import (
+    RegisterForm,
+    SportPitchesForm,
+    SportMatchesForm,
+    ListOfPlayerForm,
+)
 from django import forms
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView
 from .models import SportPitches, SportMatches, Cities, ListOfPlayers
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from datetime import datetime
 
@@ -26,7 +26,9 @@ class CityView(View):
         allpitches = SportPitches.objects.filter(city_id=selected_city.id)
         all_matches = []
         for pitch in allpitches:
-            one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id).filter(gamedate__gte=datetime.today())
+            one_pitch_matches = SportMatches.objects.filter(
+                pitch_id=pitch.id
+            ).filter(gamedate__gte=datetime.today())
             all_matches.append(one_pitch_matches)
         all_coordinates = []
         for matches in all_matches:
@@ -38,7 +40,11 @@ class CityView(View):
         return render(
             request,
             f"{city}.html",
-            {"all_matches": all_matches, "selected_city": selected_city, "all_coordinates": all_coordinates},
+            {
+                "all_matches": all_matches,
+                "selected_city": selected_city,
+                "all_coordinates": all_coordinates,
+            },
         )
 
 
@@ -94,17 +100,21 @@ class CreateSportMatchesView(CreateView):
         return form
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        super().form_valid(form)
         obj = self.object
         obj.save()
-        ListOfPlayers.objects.create(match_id=obj.id, playerName=get_user(self.request))
+        ListOfPlayers.objects.create(
+            match_id=obj.id, playerName=get_user(self.request)
+        )
         return super().form_valid(form)
 
 
 class MatchDetails(View):
     def get(self, request, city, sportmatches_id):
         match = get_object_or_404(SportMatches, pk=sportmatches_id)
-        list_of_players = ListOfPlayers.objects.filter(match_id=sportmatches_id)
+        list_of_players = ListOfPlayers.objects.filter(
+            match_id=sportmatches_id
+        )
         player_counter = 0
         for player in list_of_players:
             player_counter += 1
@@ -113,7 +123,9 @@ class MatchDetails(View):
         location_lat = str(match.pitch.location_lat)
         location_lon = str(match.pitch.location_lon)
         if empty_places > 0:
-            form = ListOfPlayerForm(initial={'playerName': name, "match": match})
+            form = ListOfPlayerForm(
+                initial={"playerName": name, "match": match}
+            )
             form.fields["playerName"].widget = forms.HiddenInput()
             form.fields["match"].widget = forms.HiddenInput()
             return render(
@@ -140,10 +152,12 @@ class MatchDetails(View):
                     "location_lon": location_lon,
                 },
             )
+
     def post(self, request, city, sportmatches_id):
         form = ListOfPlayerForm(request.POST)
         if form.is_valid():
-            new_player = ListOfPlayers.objects.create(match=form.cleaned_data['match'],
-                                                 playerName=form.cleaned_data['playerName'],)
+            ListOfPlayers.objects.create(
+                match=form.cleaned_data["match"],
+                playerName=form.cleaned_data["playerName"],
+            )
             return HttpResponseRedirect(self.request.path_info)
-        
