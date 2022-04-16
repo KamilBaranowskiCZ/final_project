@@ -33,6 +33,6 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("city/<str:city>/pitchcreate", CreateSportPitchesView.as_view()),
     path("city/<str:city>/games", CreateSportMatchesView.as_view()),
-    path("city/<str:city>", CityView.as_view()),
+    path("city/<str:city>", CityView.as_view(), name="cityview"),
     path("city/<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
 ]
