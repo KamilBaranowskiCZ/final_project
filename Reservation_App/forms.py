@@ -1,4 +1,3 @@
-from cProfile import label
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -35,14 +34,15 @@ class SportPitchesForm(forms.ModelForm):
         )
         model = SportPitches
         labels = {
-        "name": "Nazwa",
-        "city": "Miasto",
-        "location": "Lokacja",
+            "name": "Nazwa",
+            "city": "Miasto",
+            "location": "Lokacja",
         }
 
     type = forms.ModelMultipleChoiceField(
-        label='Szczegóły boiska',
-        queryset=PitchType.objects.all(), widget=forms.CheckboxSelectMultiple
+        label="Szczegóły boiska",
+        queryset=PitchType.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
     )
 
 
@@ -61,10 +61,10 @@ class SportMatchesForm(forms.ModelForm):
         )
         model = SportMatches
         labels = {
-        "pitch": "Boisko",
-        "gamedate": "Data",
-        "gametime": "Godzina rozpoczęcia",
-        "max_num_of_players": "Liczba graczy",
+            "pitch": "Boisko",
+            "gamedate": "Data",
+            "gametime": "Godzina rozpoczęcia",
+            "max_num_of_players": "Liczba graczy",
         }
         widgets = {
             "gamedate": DatePickerInput(),
