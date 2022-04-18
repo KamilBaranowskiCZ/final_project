@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib.auth import get_user
@@ -8,7 +9,7 @@ from .forms import (
     ListOfPlayerForm,
 )
 from django import forms
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DeleteView
 from .models import SportPitches, SportMatches, Cities, ListOfPlayers
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -171,3 +172,12 @@ class MatchDetails(View):
                 playerName=form.cleaned_data["playerName"],
             )
             return HttpResponseRedirect(self.request.path_info)
+
+class DeleteListOfPlayer(View):
+    def get(self, request, list_of_players_id):
+        playerslist = ListOfPlayers.objects.get(id=list_of_players_id)
+        # print(playerslist.playerName)
+        # print(get_user(self.request))
+        if str(playerslist.playerName) == str(get_user(self.request)):
+            playerslist.delete()
+        return redirect(request.META.get('HTTP_REFERER'))

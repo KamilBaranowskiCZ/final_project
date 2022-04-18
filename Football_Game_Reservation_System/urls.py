@@ -23,7 +23,8 @@ from Reservation_App.views import (
     CreateSportPitchesView,
     CreateSportMatchesView,
     CityView,
-    MatchDetails
+    MatchDetails,
+    DeleteListOfPlayer
 )
 
 urlpatterns = [
@@ -35,4 +36,5 @@ urlpatterns = [
     path("city/<str:city>/games", CreateSportMatchesView.as_view()),
     path("city/<str:city>", CityView.as_view(), name="cityview"),
     path("city/<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
+    path('delete/<int:list_of_players_id>', DeleteListOfPlayer.as_view(), name="delete-from-list"),
 ]
