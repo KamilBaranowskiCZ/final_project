@@ -40,7 +40,12 @@
 <p>Lista graczy: </p>
 {% for player in list_of_players %}
 <ul>
-    <li> {{player.playerName}}</li>
+    <li>
+        {{player.playerName}}
+        {% if  user.username == player.playerName %}
+        <a href="/delete/{{ player.id }}">usuń</a>
+        {% endif %}
+    </li>
 </ul>
 {% endfor %}
 <div id="map"></div>
