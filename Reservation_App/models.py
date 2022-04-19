@@ -15,14 +15,15 @@ class Cities(models.Model):
 
 class PitchType(models.Model):
     TYPESOFPITCH = (
-        (0, "Hala"),
-        (1, "Na świeżym powietrzu"),
-        (2, "Pod balonem"),
-        (3, "Trawiaste"),
-        (4, "Sztuczna trawa"),
-        (5, "Tartan"),
-        (6, "Z szatnią"),
-        (7, "Brak szatni"),
+        (1, "Hala"),
+        (2, "Na świeżym powietrzu"),
+        (3, "Pod balonem"),
+        (4, "Trawiaste"),
+        (5, "Sztuczna trawa"),
+        (6, "Tartan"),
+        (7, "Z szatnią"),
+        (8, "Brak szatni"),
+
     )
     type = models.IntegerField(choices=TYPESOFPITCH)
 
