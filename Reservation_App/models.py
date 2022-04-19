@@ -36,7 +36,7 @@ class SportPitches(models.Model):
     location = OSMField()
     location_lat = LatitudeField()
     location_lon = LongitudeField()
-    pitches = models.ManyToManyField(PitchType)
+    pitches = models.ManyToManyField(PitchType, blank=True)
 
     def __str__(self):
         return self.name
