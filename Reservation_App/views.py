@@ -181,3 +181,11 @@ class DeleteListOfPlayer(View):
         if str(playerslist.playerName) == str(get_user(self.request)):
             playerslist.delete()
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+class DeleteMatch(View):
+    def get(self, request, match_id):
+        match_to_delete = SportMatches.objects.get(id=match_id)
+        if str(match_to_delete.creator) == str(get_user(self.request)):
+            match_to_delete.delete()
+        return redirect("index")

@@ -12,6 +12,11 @@
 <h2>
     Boisko: {{ match.pitch }}
 </h2>
+<p>
+    {% if  user.username|stringformat:'s'  == match.creator|stringformat:'s' %}
+        <a href="/cancelmatch/{{ match.id }}">Zamknij grę</a>
+    {% endif %}
+</p>
 <h3>
     Data: {{ match.gamedate }} Godzina: {{ match.gametime }}
 </h3>
@@ -43,7 +48,7 @@
     <li>
         {{player.playerName}}
         {% if  user.username == player.playerName or match.creator|stringformat:'s' == user.username %}
-        <a href="/delete/{{ player.id }}">usuń</a>
+        <a href="/removeplayerfromgame/{{ player.id }}">usuń</a>
         {% endif %}
     </li>
 </ul>
