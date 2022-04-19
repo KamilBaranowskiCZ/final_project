@@ -72,9 +72,9 @@ class CreateSportPitchesView(CreateView):
     def get_initial(self):
         cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
-            return {"city": 2}
+            return {"city": Cities.objects.get(name="Warszawa").id}
         elif cityname == "Kraków":
-            return {"city": 1}
+            return {"city": Cities.objects.get(name="Kraków").id}
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -100,9 +100,9 @@ class CreateSportMatchesView(CreateView):
         form.fields["creator"].widget = forms.HiddenInput()
         cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
-            form.fields["pitch"].queryset = SportPitches.objects.filter(city=2)
+            form.fields["pitch"].queryset = SportPitches.objects.filter(city=Cities.objects.get(name="Warszawa").id)
         elif cityname == "Kraków":
-            form.fields["pitch"].queryset = SportPitches.objects.filter(city=1)
+            form.fields["pitch"].queryset = SportPitches.objects.filter(city=Cities.objects.get(name="Kraków").id)
         return form
 
 

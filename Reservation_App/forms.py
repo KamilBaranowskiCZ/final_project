@@ -22,6 +22,7 @@ class SportPitchesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SportPitchesForm, self).__init__(*args, **kwargs)
         self.fields["city"].disabled = True
+        self.fields['type'].required = False
 
     class Meta:
         fields = (
