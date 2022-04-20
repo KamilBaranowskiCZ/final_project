@@ -17,7 +17,7 @@ def populate(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Reservation_App', 'initial'),
+        ('Reservation_App', '0001_initial'),
     ]
 
     operations = [
