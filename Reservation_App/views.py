@@ -23,7 +23,7 @@ class MainPageView(View):
 
 class CityView(View):
     def get(self, request, city):
-        # displaying all matches in selected city
+        '''displaying all matches in selected city'''
         selected_city = Cities.objects.filter(name=city).first()
         allpitches = SportPitches.objects.filter(city_id=selected_city.id)
         all_matches = []
@@ -32,7 +32,7 @@ class CityView(View):
                 pitch_id=pitch.id
             ).filter(gamedate__gte=datetime.today())
             all_matches.append(one_pitch_matches)
-        # adding coordiantes of all active matches
+        '''adding coordiantes of all active matches'''
         all_coordinates = []
         for matches in all_matches:
             for one_match in matches:
@@ -68,8 +68,9 @@ class CreateSportPitchesView(CreateView):
     model = SportPitches
     success_url = reverse_lazy("index")
 
-    # filling city field accordingly to url
+
     def get_initial(self):
+        '''filling city field accordingly to url'''
         cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
             return {"city": Cities.objects.get(name="Warszawa").id}
@@ -89,9 +90,9 @@ class CreateSportMatchesView(CreateView):
     model = SportMatches
     success_url = reverse_lazy("index")
 
-    # filling creator field by logged user name
 
     def get_initial(self):
+        '''filling creator field by logged user name'''
         name = get_user(self.request)
         return {"creator": name}
 
@@ -123,7 +124,7 @@ class MatchDetails(View):
         list_of_players = ListOfPlayers.objects.filter(
             match_id=sportmatches_id
         )
-        # counter of empty places at list of player list
+        '''counter of empty places at list of player list'''
         player_counter = 0
         for player in list_of_players:
             player_counter += 1
@@ -131,8 +132,8 @@ class MatchDetails(View):
         name = get_user(self.request)
         location_lat = str(match.pitch.location_lat)
         location_lon = str(match.pitch.location_lon)
-        # render html when game has empty spots
         if empty_places > 0:
+            '''render html when game has empty spots'''
             form = ListOfPlayerForm(
                 initial={"playerName": name, "match": match}
             )
@@ -150,8 +151,9 @@ class MatchDetails(View):
                     "location_lon": location_lon,
                 },
             )
-        # render html when game hasn't empty spots
+        
         else:
+            '''render html when game hasn't empty spots'''
             return render(
                 request,
                 "matchDetailEmpty.html",
@@ -163,8 +165,8 @@ class MatchDetails(View):
                     "location_lon": location_lon,
                 },
             )
-    # adding logged user to game list of players
     def post(self, request, city, sportmatches_id):
+        '''adding logged user to game list of players'''
         form = ListOfPlayerForm(request.POST)
         if form.is_valid():
             ListOfPlayers.objects.create(
@@ -175,6 +177,7 @@ class MatchDetails(View):
 
 class DeleteListOfPlayer(View):
     def get(self, request, list_of_players_id):
+        '''delete player from player list in game, player only remove himself'''
         playerslist = ListOfPlayers.objects.get(id=list_of_players_id)
         # print(playerslist.playerName)
         # print(get_user(self.request))
@@ -185,6 +188,7 @@ class DeleteListOfPlayer(View):
 
 class DeleteMatch(View):
     def get(self, request, match_id):
+        '''delete game only by creator'''
         match_to_delete = SportMatches.objects.get(id=match_id)
         if str(match_to_delete.creator) == str(get_user(self.request)):
             match_to_delete.delete()
