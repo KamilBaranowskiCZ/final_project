@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 {% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-   crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-   crossorigin=""></script>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+      integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+      crossorigin="" />
+<style>
+  .leaflet-default-icon-path {
+    /* used only in path-guessing heuristic, see L.Icon.Default */
+    background-image: url(/static/images/marker-icon.png);
+  }
+</style>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
 {% endblock %}
 {% block title %}Strona główna{% endblock %}
 {% block navbar %}
@@ -25,14 +32,14 @@
 {% endfor %}
 <div id="map"></div>
 <script>
-    var map = L.map('map').setView([52.2333, 21.062], 11);
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  var map = L.map('map').setView([52.2333, 21.062], 11);
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+  }).addTo(map);
 </script>
 {% for coordinates in all_coordinates %}
-  <script>
-      var marker = L.marker([{{coordinates}}]).addTo(map)
-  </script>
+<script>
+  var marker = L.marker([{{ coordinates }}]).addTo(map)
+</script>
 {% endfor %}
 {% endblock %}
