@@ -4,20 +4,19 @@ import pytest
 
 @pytest.fixture
 def cityCracow():
-    cityCracow = Cities.objects.create(name="Kraków")
+    cityCracow = Cities.objects.get(name="Kraków")
     return cityCracow
 
 
 @pytest.fixture
 def cityWarsaw():
-    cityWarsaw = Cities.objects.create(name="Warszawa")
+    cityWarsaw = Cities.objects.get(name="Warszawa")
     return cityWarsaw
 
 
 @pytest.fixture
 def createPitch():
-    city = Cities.objects.create(name="Kraków")
-    city.save()
+    city = Cities.objects.get(name="Kraków")
     examplePitch = SportPitches.objects.create(
         name="Orlik",
         city_id=city.id,
@@ -30,8 +29,7 @@ def createPitch():
 @pytest.fixture
 def createMatch():
     user = User.objects.create(username="ExampleUser")
-    city = Cities.objects.create(name="Kraków")
-    city.save()
+    city = Cities.objects.get(name="Kraków")
     pitch = SportPitches.objects.create(
         name="Orlik",
         city_id=city.id,
