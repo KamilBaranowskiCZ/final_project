@@ -66,7 +66,9 @@ class CreateSportPitchesView(CreateView):
     template_name = "pitchcreate.html"
     form_class = SportPitchesForm
     model = SportPitches
-    success_url = reverse_lazy("index")
+
+    def get_success_url(self):
+        return reverse_lazy("cityview", kwargs={"city": self.kwargs.get("city")})
 
 
     def get_initial(self):
@@ -88,8 +90,9 @@ class CreateSportMatchesView(CreateView):
     template_name = "games.html"
     form_class = SportMatchesForm
     model = SportMatches
-    success_url = reverse_lazy("index")
 
+    def get_success_url(self):
+        return reverse_lazy("cityview", kwargs={"city": self.kwargs.get("city")})
 
     def get_initial(self):
         '''filling creator field by logged user name'''
