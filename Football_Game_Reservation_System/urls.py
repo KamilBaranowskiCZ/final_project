@@ -1,5 +1,4 @@
 """Football_Game_Reservation_System URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
@@ -33,8 +32,8 @@ urlpatterns = [
     path("", MainPageView.as_view(), name="index"),
     path("register/", register, name="register"),
     path("", include("django.contrib.auth.urls")),
-    path("city/<str:city>/pitchcreate", CreateSportPitchesView.as_view()),
-    path("city/<str:city>/games", CreateSportMatchesView.as_view()),
+    path("city/<str:city>/pitchcreate", CreateSportPitchesView.as_view(), name="pitch-create"),
+    path("city/<str:city>/games", CreateSportMatchesView.as_view(), name='match-create'),
     path("city/<str:city>", CityView.as_view(), name="cityview"),
     path("city/<str:city>/<int:sportmatches_id>", MatchDetails.as_view(), name="matchDetails"),
     path('removeplayerfromgame/<int:list_of_players_id>', DeleteListOfPlayer.as_view(), name="delete-from-list"),
