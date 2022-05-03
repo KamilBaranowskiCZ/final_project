@@ -6,6 +6,7 @@ from .models import (
     SportMatches,
     ListOfPlayers,
     PitchType,
+    MatchComments,
 )
 from .widgets import DatePickerInput, TimePickerInput
 
@@ -80,3 +81,14 @@ class ListOfPlayerForm(forms.ModelForm):
     class Meta:
         fields = ("match", "playerName")
         model = ListOfPlayers
+
+
+class CommentForm(forms.ModelForm):
+
+
+    class Meta:
+        model = MatchComments
+        fields = ('match','name', 'body',)
+        labels = {
+            "body": "",
+        }
