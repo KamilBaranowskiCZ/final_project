@@ -61,5 +61,19 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 </script>
-
+<h3>Komentarze: </h3>
+{% if not match.comments.all %}
+    Brak komentarzy <a href="#">Dodaj komentarz</a>
+{% else %}
+    {% for comment in match.comments.all %}
+        <strong>
+            Dodany przez: {{comment.name}}
+            {{comment.date_added}}
+        </strong>
+        <br>
+        {{comment.body}}
+        <br><br>
+    {% endfor %}
+<a href="#">Dodaj komentarz</a>
+{% endif %}
 {% endblock %}
