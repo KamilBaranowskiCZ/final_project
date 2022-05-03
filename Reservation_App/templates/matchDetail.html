@@ -63,17 +63,24 @@
 </script>
 <h3>Komentarze: </h3>
 {% if not match.comments.all %}
-    Brak komentarzy <a href="#">Dodaj komentarz</a>
+    Brak komentarzy
 {% else %}
     {% for comment in match.comments.all %}
         <strong>
             Dodany przez: {{comment.name}}
-            {{comment.date_added}}
+            {% load tz %}
+            {{comment.date_added|timezone:"Europe/Warsaw"}}
         </strong>
         <br>
         {{comment.body}}
         <br><br>
     {% endfor %}
-<a href="#">Dodaj komentarz</a>
+{% endif %}
+{% if user.is_authenticated %}
+<form class="myform" action = "" method = "post">
+    {% csrf_token %}
+    {{comment_form}}
+    <input type="submit" value="Dodaj komentarz">
+</form>
 {% endif %}
 {% endblock %}

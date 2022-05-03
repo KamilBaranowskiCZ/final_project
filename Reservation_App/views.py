@@ -7,10 +7,11 @@ from .forms import (
     SportPitchesForm,
     SportMatchesForm,
     ListOfPlayerForm,
+    CommentForm,
 )
 from django import forms
 from django.views.generic import CreateView, DeleteView
-from .models import SportPitches, SportMatches, Cities, ListOfPlayers
+from .models import SportPitches, SportMatches, Cities, ListOfPlayers, MatchComments
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from datetime import datetime
@@ -135,6 +136,11 @@ class MatchDetails(View):
         name = get_user(self.request)
         location_lat = str(match.pitch.location_lat)
         location_lon = str(match.pitch.location_lon)
+        comment_form = CommentForm(
+            initial={"name": name, "match": match})
+        comment_form.fields["match"].widget = forms.HiddenInput()
+        
+        comment_form.fields["name"].widget = forms.HiddenInput()
         if empty_places > 0:
             '''render html when game has empty spots'''
             form = ListOfPlayerForm(
@@ -152,6 +158,7 @@ class MatchDetails(View):
                     "form": form,
                     "location_lat": location_lat,
                     "location_lon": location_lon,
+                    "comment_form": comment_form
                 },
             )
         
@@ -171,10 +178,18 @@ class MatchDetails(View):
     def post(self, request, city, sportmatches_id):
         '''adding logged user to game list of players'''
         form = ListOfPlayerForm(request.POST)
+        comment_form = CommentForm(request.POST)
         if form.is_valid():
             ListOfPlayers.objects.create(
                 match=form.cleaned_data["match"],
                 playerName=form.cleaned_data["playerName"],
+            )
+            return HttpResponseRedirect(self.request.path_info)
+        if comment_form.is_valid():
+            MatchComments.objects.create(
+                match=comment_form.cleaned_data["match"],
+                name=comment_form.cleaned_data["name"],
+                body=comment_form.cleaned_data["body"],
             )
             return HttpResponseRedirect(self.request.path_info)
 
@@ -182,8 +197,6 @@ class DeleteListOfPlayer(View):
     def get(self, request, list_of_players_id):
         '''delete player from player list in game, player only remove himself'''
         playerslist = ListOfPlayers.objects.get(id=list_of_players_id)
-        # print(playerslist.playerName)
-        # print(get_user(self.request))
         if str(playerslist.playerName) == str(get_user(self.request)):
             playerslist.delete()
         return redirect(request.META.get('HTTP_REFERER'))
