@@ -1,3 +1,4 @@
+from nis import match
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
@@ -59,3 +60,11 @@ class SportMatches(models.Model):
 class ListOfPlayers(models.Model):
     match = models.ForeignKey(SportMatches, on_delete=models.CASCADE)
     playerName = models.CharField(max_length=30)
+
+
+class MatchComments(models.Model):
+    match = models.ForeignKey(SportMatches, related_name="comments", on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    body = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
