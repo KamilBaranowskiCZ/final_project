@@ -1,3 +1,4 @@
+import email
 from urllib import request
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
@@ -57,7 +58,7 @@ def register(response):
         form = RegisterForm(response.POST)
         if form.is_valid():
             form.save()
-        return redirect("/")
+            return redirect("/")
     else:
         form = RegisterForm()
     return render(response, "register/register.html", {"form": form})
