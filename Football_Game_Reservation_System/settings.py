@@ -82,7 +82,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "football_reservation_db",
         "USER": "postgres",
-        "PASSWORD": "coderslab",
+        "PASSWORD": "testPassword",
     }
 }
 
