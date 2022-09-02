@@ -1,5 +1,3 @@
-import email
-from urllib import request
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.contrib.auth import get_user
@@ -25,16 +23,16 @@ class MainPageView(View):
 
 class CityView(View):
     def get(self, request, city):
-        '''displaying all matches in selected city'''
+        """displaying all matches in selected city"""
         selected_city = Cities.objects.filter(name=city).first()
         allpitches = SportPitches.objects.filter(city_id=selected_city.id)
         all_matches = []
         for pitch in allpitches:
-            one_pitch_matches = SportMatches.objects.filter(
-                pitch_id=pitch.id
-            ).filter(gamedate__gte=datetime.today())
+            one_pitch_matches = SportMatches.objects.filter(pitch_id=pitch.id).filter(
+                gamedate__gte=datetime.today()
+            )
             all_matches.append(one_pitch_matches)
-        '''adding coordiantes of all active matches'''
+        """adding coordiantes of all active matches"""
         all_coordinates = []
         for matches in all_matches:
             for one_match in matches:
@@ -72,9 +70,8 @@ class CreateSportPitchesView(CreateView):
     def get_success_url(self):
         return reverse_lazy("cityview", kwargs={"city": self.kwargs.get("city")})
 
-
     def get_initial(self):
-        '''filling city field accordingly to url'''
+        """filling city field accordingly to url"""
         cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
             return {"city": Cities.objects.get(name="Warszawa").id}
@@ -87,6 +84,16 @@ class CreateSportPitchesView(CreateView):
         form.fields["location_lon"].widget = forms.HiddenInput()
         return form
 
+    def form_valid(self, form):
+        super().form_valid(form)
+        pitch = form.save(commit=False)
+        for type in form.cleaned_data["pitch"]:
+            pitch.pitches.add(type)
+        pitch.save()
+        form.save_m2m()
+
+        return super().form_valid(form)
+
 
 class CreateSportMatchesView(CreateView):
     template_name = "games.html"
@@ -97,7 +104,7 @@ class CreateSportMatchesView(CreateView):
         return reverse_lazy("cityview", kwargs={"city": self.kwargs.get("city")})
 
     def get_initial(self):
-        '''filling creator field by logged user name'''
+        """filling creator field by logged user name"""
         name = get_user(self.request)
         return {"creator": name}
 
@@ -106,30 +113,29 @@ class CreateSportMatchesView(CreateView):
         form.fields["creator"].widget = forms.HiddenInput()
         cityname = self.kwargs.get("city")
         if cityname == "Warszawa":
-            form.fields["pitch"].queryset = SportPitches.objects.filter(city=Cities.objects.get(name="Warszawa").id)
+            form.fields["pitch"].queryset = SportPitches.objects.filter(
+                city=Cities.objects.get(name="Warszawa").id
+            )
         elif cityname == "Kraków":
-            form.fields["pitch"].queryset = SportPitches.objects.filter(city=Cities.objects.get(name="Kraków").id)
+            form.fields["pitch"].queryset = SportPitches.objects.filter(
+                city=Cities.objects.get(name="Kraków").id
+            )
         return form
-
 
     # create list of player to created game and add creator as first user at this list
     def form_valid(self, form):
         super().form_valid(form)
         obj = self.object
         obj.save()
-        ListOfPlayers.objects.create(
-            match_id=obj.id, playerName=get_user(self.request)
-        )
+        ListOfPlayers.objects.create(match_id=obj.id, playerName=get_user(self.request))
         return super().form_valid(form)
 
 
 class MatchDetails(View):
     def get(self, request, city, sportmatches_id):
         match = get_object_or_404(SportMatches, pk=sportmatches_id)
-        list_of_players = ListOfPlayers.objects.filter(
-            match_id=sportmatches_id
-        )
-        '''counter of empty places at list of player list'''
+        list_of_players = ListOfPlayers.objects.filter(match_id=sportmatches_id)
+        """counter of empty places at list of player list"""
         player_counter = 0
         for player in list_of_players:
             player_counter += 1
@@ -137,16 +143,14 @@ class MatchDetails(View):
         name = get_user(self.request)
         location_lat = str(match.pitch.location_lat)
         location_lon = str(match.pitch.location_lon)
-        comment_form = CommentForm(
-            initial={"name": name, "match": match})
+        comment_form = CommentForm(initial={"name": name, "match": match})
         comment_form.fields["match"].widget = forms.HiddenInput()
-        
+
+
         comment_form.fields["name"].widget = forms.HiddenInput()
         if empty_places > 0:
-            '''render html when game has empty spots'''
-            form = ListOfPlayerForm(
-                initial={"playerName": name, "match": match}
-            )
+            """render html when game has empty spots"""
+            form = ListOfPlayerForm(initial={"playerName": name, "match": match})
             form.fields["playerName"].widget = forms.HiddenInput()
             form.fields["match"].widget = forms.HiddenInput()
             return render(
@@ -159,12 +163,12 @@ class MatchDetails(View):
                     "form": form,
                     "location_lat": location_lat,
                     "location_lon": location_lon,
-                    "comment_form": comment_form
+                    "comment_form": comment_form,
                 },
             )
-        
+
         else:
-            '''render html when game hasn't empty spots'''
+            """render html when game hasn't empty spots"""
             return render(
                 request,
                 "matchDetailEmpty.html",
@@ -176,8 +180,9 @@ class MatchDetails(View):
                     "location_lon": location_lon,
                 },
             )
+
     def post(self, request, city, sportmatches_id):
-        '''adding logged user to game list of players'''
+        """adding logged user to game list of players"""
         form = ListOfPlayerForm(request.POST)
         comment_form = CommentForm(request.POST)
         if form.is_valid():
@@ -194,18 +199,19 @@ class MatchDetails(View):
             )
             return HttpResponseRedirect(self.request.path_info)
 
+
 class DeleteListOfPlayer(View):
     def get(self, request, list_of_players_id):
-        '''delete player from player list in game, player only remove himself'''
+        """delete player from player list in game, player only remove himself"""
         playerslist = ListOfPlayers.objects.get(id=list_of_players_id)
         if str(playerslist.playerName) == str(get_user(self.request)):
             playerslist.delete()
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 class DeleteMatch(View):
     def get(self, request, match_id):
-        '''delete game only by creator'''
+        """delete game only by creator"""
         match_to_delete = SportMatches.objects.get(id=match_id)
         if str(match_to_delete.creator) == str(get_user(self.request)):
             match_to_delete.delete()

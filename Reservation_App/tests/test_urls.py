@@ -1,44 +1,40 @@
-import pytest
+from django.test import SimpleTestCase
+from django.urls import reverse, resolve
+from Reservation_App.views import (
+    MainPageView,
+    CreateSportPitchesView,
+    CreateSportMatchesView,
+    CityView,
+    MatchDetails,
+    DeleteListOfPlayer,
+    DeleteMatch
+)
 
-from django.urls import reverse
+class TestUrls(SimpleTestCase):
+    def test_main_page_resolves(self):
+        url = reverse("index")
+        self.assertEquals(resolve(url).func.view_class, MainPageView)
 
-def test_main_view(client):
-    url = reverse("index")
-    response = client.get(url)
-    assert response.status_code == 200
+    def test_create_ptich_url_resolves(self):
+        url = reverse("pitch-create", args=["Kraków"])
+        self.assertEquals(resolve(url).func.view_class, CreateSportPitchesView)
 
+    def test_create_matchurl_resolves(self):
+        url = reverse("match-create", args=["Kraków"])
+        self.assertEquals(resolve(url).func.view_class, CreateSportMatchesView)
 
-def test_register_view(client):
-    url = reverse("register")
-    response = client.get(url)
-    assert response.status_code == 200
+    def test_city_view_url_resolves(self):
+        url = reverse("cityview", args=["Kraków"])
+        self.assertEquals(resolve(url).func.view_class, CityView)
 
-@pytest.mark.django_db
-def test_pitchCreate_view(client):
-    url = reverse("pitch-create", kwargs={"city": "Kraków"})
-    response = client.get(url)
-    assert response.status_code == 200
+    def test_match_details_url_resolves(self):
+        url = reverse("matchDetails", args=["Kraków", 1])
+        self.assertEquals(resolve(url).func.view_class, MatchDetails)
 
-@pytest.mark.django_db
-def test_aboutmePage_view(client):
-    url = reverse("match-create", kwargs={"city": "Kraków"})
-    response = client.get(url)
-    assert response.status_code == 200
+    def test_delete_player_url_resolves(self):
+        url = reverse("delete-from-list", args=[1])
+        self.assertEquals(resolve(url).func.view_class, DeleteListOfPlayer)
 
-@pytest.mark.django_db
-def test_city_view(client):
-    url = reverse("cityview", kwargs={"city": "Kraków"})
-    response = client.get(url)
-    assert response.status_code == 200
-
-@pytest.mark.django_db
-def test_match_detail_view(client,createMatch):
-    url = reverse("matchDetails", kwargs={"city": "Kraków", "sportmatches_id": 1})
-    response = client.get(url)
-    assert response.status_code == 200
-
-@pytest.mark.django_db
-def test_delete_match_view(client,createMatch):
-    url = reverse("delete-match", kwargs={'match_id': createMatch.id})
-    response = client.get(url)
-    assert response.status_code == 302
+    def test_delete_match_url_resolves(self):
+        url = reverse("delete-match", args=[1])
+        self.assertEquals(resolve(url).func.view_class, DeleteMatch)

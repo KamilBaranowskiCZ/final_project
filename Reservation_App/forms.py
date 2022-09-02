@@ -23,7 +23,7 @@ class SportPitchesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SportPitchesForm, self).__init__(*args, **kwargs)
         self.fields["city"].disabled = True
-        self.fields['type'].required = False
+        self.fields['pitch'].required = False
 
     class Meta:
         fields = (
@@ -32,7 +32,7 @@ class SportPitchesForm(forms.ModelForm):
             "location",
             "location_lat",
             "location_lon",
-            "type",
+            "pitch",
         )
         model = SportPitches
         labels = {
@@ -41,7 +41,7 @@ class SportPitchesForm(forms.ModelForm):
             "location": "Lokacja",
         }
 
-    type = forms.ModelMultipleChoiceField(
+    pitch = forms.ModelMultipleChoiceField(
         label="Szczegóły boiska",
         queryset=PitchType.objects.all(),
         widget=forms.CheckboxSelectMultiple,
