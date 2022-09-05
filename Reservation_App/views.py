@@ -206,7 +206,10 @@ class DeleteListOfPlayer(View):
         playerslist = ListOfPlayers.objects.get(id=list_of_players_id)
         if str(playerslist.playerName) == str(get_user(self.request)):
             playerslist.delete()
-        return redirect(request.META.get("HTTP_REFERER"))
+        pitch_id = SportMatches.objects.get(id=playerslist.match_id).pitch_id
+        city_id = SportPitches.objects.get(id=pitch_id).city_id
+        cityname=Cities.objects.get(id=city_id)
+        return redirect("matchDetails", city=cityname, sportmatches_id= playerslist.match_id)
 
 
 class DeleteMatch(View):
